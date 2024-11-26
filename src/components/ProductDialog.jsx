@@ -48,11 +48,17 @@ const ProductDialog = ({
   };
 
   const isSelected = (productId, variantId = null) => {
-    if (!selectedProducts[productId]) return false;
+    if (!selectedProducts || typeof selectedProducts !== "object") return null;
+
+    const productSelection = selectedProducts[productId];
+
+    if (!productSelection || !Array.isArray(productSelection)) return null;
+
     if (variantId) {
-      return selectedProducts[productId].some((v) => v.id === variantId);
+      const variant = productSelection.find((v) => v.id === variantId);
+      return variant || null;
     }
-    return true;
+    return productSelection;
   };
 
   const filteredProducts = products.filter((product) =>
