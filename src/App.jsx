@@ -11,36 +11,63 @@ const App = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDialogProducts, setSelectedDialogProducts] = useState({});
-  console.log(selectedDialogProducts);
+
+  // useEffect(() => {
+  //   setFetchedProducts([
+  //     {
+  //       id: 77,
+  //       title: "Fog Linen Chambray Towel - Beige Stripe",
+  //       variants: [
+  //         { id: 1, product_id: 77, title: "XS / Silver", price: "49" },
+  //         { id: 2, product_id: 77, title: "S / Silver", price: "49" },
+  //         { id: 3, product_id: 77, title: "M / Silver", price: "49" },
+  //       ],
+  //       image: {
+  //         id: 266,
+  //         product_id: 77,
+  //         src: "https://cdn11.bigcommerce.com/s-p1xcugzp89/products/77/images/266/foglinenbeigestripetowel1b.1647248662.386.513.jpg?c=1",
+  //       },
+  //     },
+  //     {
+  //       id: 80,
+  //       title: "Orbit Terrarium - Large",
+  //       variants: [
+  //         { id: 64, product_id: 80, title: "Default Title", price: "109" },
+  //       ],
+  //       image: {
+  //         id: 272,
+  //         product_id: 80,
+  //         src: "https://cdn11.bigcommerce.com/s-p1xcugzp89/products/80/images/272/roundterrariumlarge.1647248662.386.513.jpg?c=1",
+  //       },
+  //     },
+  //   ]);
+  // }, []);
   useEffect(() => {
-    setFetchedProducts([
-      {
-        id: 77,
-        title: "Fog Linen Chambray Towel - Beige Stripe",
-        variants: [
-          { id: 1, product_id: 77, title: "XS / Silver", price: "49" },
-          { id: 2, product_id: 77, title: "S / Silver", price: "49" },
-          { id: 3, product_id: 77, title: "M / Silver", price: "49" },
-        ],
-        image: {
-          id: 266,
-          product_id: 77,
-          src: "https://cdn11.bigcommerce.com/s-p1xcugzp89/products/77/images/266/foglinenbeigestripetowel1b.1647248662.386.513.jpg?c=1",
-        },
-      },
-      {
-        id: 80,
-        title: "Orbit Terrarium - Large",
-        variants: [
-          { id: 64, product_id: 80, title: "Default Title", price: "109" },
-        ],
-        image: {
-          id: 272,
-          product_id: 80,
-          src: "https://cdn11.bigcommerce.com/s-p1xcugzp89/products/80/images/272/roundterrariumlarge.1647248662.386.513.jpg?c=1",
-        },
-      },
-    ]);
+    const url = `https://stageapi.monkcommerce.app/task/products/search?search=${searchQuery}&page=2&limit=1`;
+
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": import.meta.env.VITE_REACT_APP_API_KEY,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setFetchedProducts(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const handleOpenDialog = () => setIsDialogOpen(true);
@@ -81,7 +108,6 @@ const App = () => {
     setSelectedDialogProducts({});
     handleCloseDialog();
   };
-  console.log(selectedProducts);
 
   const handleRemoveVariant = (productId, variantId) => {
     const updatedProducts = selectedProducts.map((product) => {

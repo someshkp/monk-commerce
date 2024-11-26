@@ -130,20 +130,27 @@ const ProductDialog = ({
                 {product.variants?.map((variant) => (
                   <div
                     key={variant.id}
-                    className="pl-6 flex items-center space-x-4 mt-2"
+                    className="pl-6 flex justify-between items-center  mt-2"
                   >
-                    <input
-                      type="checkbox"
-                      checked={isSelected(product.id, variant.id)}
-                      onChange={() =>
-                        toggleProductSelection(product.id, variant.id)
-                      }
-                      className="form-checkbox"
-                    />
-                    <span>{variant.title}</span>
-                    <span className="text-gray-500">
-                      ${parseFloat(variant.price).toFixed(2)}
-                    </span>
+                    <div className="space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={isSelected(product.id, variant.id)}
+                        onChange={() =>
+                          toggleProductSelection(product.id, variant.id)
+                        }
+                        className="form-checkbox"
+                      />
+                      <span>{variant.title}</span>
+                    </div>
+                    <div>
+                      <span>{variant.inventory_quantity} available</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">
+                        ${parseFloat(variant.price).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
